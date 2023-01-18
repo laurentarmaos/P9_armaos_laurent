@@ -10,10 +10,10 @@
 	   <h1 th:inline="text">Add Note for [[${patientBean.firstName}]]</h1>
 	</div>
 
-	<form action="#" th:action="@{/patient/validateNote/{id}(id=${patientBean.patientId})}" th:object="${noteBean}" method="post">
+	<form action="#" th:action="@{/patient/{id}(id=${patientBean.patientId})/addnote}" th:object="${noteBean}" method="post">
 		
-		<label for="note">Notes</label>
-		<input th:field="*{practitionner_notes}" placeholder="Notes" required>
+		<label for="practitionnerNotes">Notes</label>
+		<input th:field="*{practitionnerNotes}" placeholder="Notes" required>
 		
 		<input type="submit" value="Add Note">
 	</form>

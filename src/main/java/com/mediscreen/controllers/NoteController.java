@@ -23,7 +23,7 @@ private final NotesProxy noteProxy;
 		this.noteProxy = noteProxy;
 	}
 	
-	@GetMapping("/patient/addnote/{id}")
+	@GetMapping("/patient/{id}/addnote")
 	public String addNoteForm(@PathVariable("id") Long id, Model model) {
 		
 		PatientBean patientBean = patientProxy.findPatient(id);
@@ -33,9 +33,9 @@ private final NotesProxy noteProxy;
 		return "addNote";
 	}
 	
-	@PostMapping("/patient/validateNote/{id}")
+	@PostMapping("/patient/{id}/addnote")
 	public String addNote(@ModelAttribute("noteBean") NoteBean noteBean, @PathVariable("id") String id, Model model) {
-		noteBean.setPatient_id(id);
+		noteBean.setPatientId(id);
 		noteProxy.addNote(id, noteBean);
 		
 		return "redirect:/";
