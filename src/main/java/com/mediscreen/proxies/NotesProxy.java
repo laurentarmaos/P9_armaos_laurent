@@ -10,6 +10,6 @@ import com.mediscreen.beans.NoteBean;
 @FeignClient(name="microservice-notes", url="localhost:8082")
 public interface NotesProxy {
 
-	@PostMapping("/patient/addnote/{id}")
+	@PostMapping("/patient/{id}/addnote")
 	public NoteBean addNote(@PathVariable("id") String id, @RequestBody NoteBean noteBean);
 }
