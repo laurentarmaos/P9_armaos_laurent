@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+   <title>Mediscreen</title>
+
+</head>
+
+<body>
+	<div class="container">
+	   <h1>Add Patient</h1>
+	</div>
+
+	<form action="#" th:action="@{/patient/validateAdd}" th:object="${patient}" method="post">
+		
+		<label for="firstName">First Name</label>
+		<input th:field="*{firstName}" placeholder="First Name" required>
+		
+		<label for="lastName">Last Name</label>
+		<input th:field="*{lastName}" placeholder="Last Name" required>
+		
+		<label for="gender">Gender</label>
+		<select th:field="*{gender}">
+			<option th:value="M" th:text="M">
+			<option th:value="F" th:text="F">
+		</select>
+		
+		<label for="birthDate">Birth Date</label>
+		<input type="date" th:field="*{birthDate}" placeholder="Birth Date" required>
+		
+		<label for="phone">Phone</label>
+		<input th:field="*{phone}" placeholder="Phone">
+		
+		<label for="address">Address</label>
+		<input th:field="*{address}" placeholder="Address">
+		
+		<input type="submit" value="Add Patient">
+	</form>
+
+</body>
+</html>

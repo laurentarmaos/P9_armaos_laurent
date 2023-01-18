@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+   <title>Mediscreen</title>
+
+</head>
+
+<body>
+	<div class="container">
+	   <h1>Patients</h1>
+	</div>
+
+	<div th:each="patient : ${patients}">
+	
+		<p th:text="${patient.firstName}"></p>
+		<p th:text="${patient.lastName}"></p>
+		<p th:text="${patient.birthDate}"></p>
+		<p th:text="${patient.gender}"></p>
+
+	</div>
+
+</body>
+</html>
