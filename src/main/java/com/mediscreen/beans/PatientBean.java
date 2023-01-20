@@ -23,6 +23,10 @@ public class PatientBean {
 	private String phone;
 	
 	public PatientBean() {}
+	
+	public PatientBean(Long patientId) {
+		this.patientId = patientId;
+	}
 
 	public Long getPatientId() {
 		return patientId;

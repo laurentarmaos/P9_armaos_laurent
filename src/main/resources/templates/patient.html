@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+   <title>Mediscreen</title>
+
+</head>
+
+<body>
+	<div class="container">
+	   <h1 th:inline="text">Patient [[${patient.firstName}]]</h1>
+	</div>
+
+	<p th:text="${patient.firstName}"></p>
+	<p th:text="${patient.lastName}"></p>
+	<p th:text="${patient.birthDate}"></p>
+	<p th:text="${patient.gender}"></p>
+	
+	<a th:href="@{/patient/{id}/addnote(id=${patient.patientId})}" >add notes</a>
+	<br>
+	<a th:href="@{/patient/{id}/update(id=${patient.patientId})}" >update patient</a>
+	<br>
+	<a th:href="@{/patient/{id}/delete(id=${patient.patientId})}" >delete patient</a>
+
+</body>
+</html>

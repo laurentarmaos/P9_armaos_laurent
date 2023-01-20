@@ -24,8 +24,8 @@ public interface PatientProxy {
 	@PostMapping("/patient/add")
 	public PatientBean addPatient(@RequestBody PatientBean patientBean);
 	
-	@PutMapping("/patient/update/{id}")
-	public PatientBean updatePatient(@PathVariable("id") Long id, @RequestBody PatientBean patientBean);
+	@PutMapping("/patient/update")
+	public PatientBean updatePatient(@RequestBody PatientBean patientBean);
 	
 	
 	@DeleteMapping("/patient/delete/{id}")

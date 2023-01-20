@@ -16,7 +16,7 @@
 		<p th:text="${patient.lastName}"></p>
 		<p th:text="${patient.birthDate}"></p>
 		<p th:text="${patient.gender}"></p>
-
+		<a th:href="@{/patient/{id}(id=${patient.patientId})}">See patient</a>
 	</div>
 
 </body>
