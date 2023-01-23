@@ -17,7 +17,9 @@ public class MediscreenNoteServiceImpl implements MediscreenNoteService {
 	@Override
 	public NoteBean addNote(NoteBean noteBean) {
 		
-		return noteProxy.addNote(noteBean);
+		//return noteProxy.addNote(noteBean);
+		
+		return noteProxy.addNote(noteBean.getPractitionnerNotes(), noteBean.getPatientId());
 	}
 
 }
