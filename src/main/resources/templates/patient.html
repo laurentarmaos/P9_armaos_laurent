@@ -7,7 +7,7 @@
 
 <body>
 	<div class="container">
-	   <h1 th:inline="text">Patient [[${patient.firstName}]]</h1>
+	   <h1 th:inline="text">Patient [[${patient.lastName}]] [[${patient.firstName}]]</h1>
 	</div>
 
 	<p th:text="${patient.firstName}"></p>
@@ -19,7 +19,9 @@
 	<br>
 	<a th:href="@{/patient/{id}/update(id=${patient.patientId})}" >update patient</a>
 	<br>
-	<a th:href="@{/patient/{id}/delete(id=${patient.patientId})}" >delete patient</a>
+	<!--  <a th:href="@{/patient/{id}/delete(id=${patient.patientId})}" >delete patient</a> -->
+	<br>
+	<a th:href="@{/assess/{id}(id=${patient.patientId})}" >diabete risk</a>
 
 </body>
 </html>

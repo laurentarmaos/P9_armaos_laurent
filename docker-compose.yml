@@ -1,0 +1,92 @@
+version: "3"
+services:
+
+  mysql_db:
+    image: "mysql:8.0"
+    volumes:
+      - mysql_db_data:/var/lib/mysql
+    restart: always
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_DATABASE: mediscreen
+      MYSQL_ROOT_PASSWORD: root
+    cap_add:
+      - SYS_NICE
+
+  mongodb:
+      image: mongo:latest
+      volumes:
+        - mongo_db_data:/data/db
+        - mongo_config:/data/configdb
+      restart: always
+      ports:
+        - "27018:27017"
+
+  mediscreen:
+    depends_on:
+      - patientinfos
+      - practitionnernotes
+      - risks
+    image: mediscreen:1.0
+    build:
+      context: mediscreen
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      PATIENT_INFO_PROXY_URL: http://patientinfos:8081
+      PRACTITIONNER_NOTE_PROXY_URL: http://practitionnernotes:8082
+      RISK_PROXY_URL: http://risks:8083
+
+  patientinfos:
+    image: patient_info:1.0
+    build:
+      context: Mediscreen_patient_basic_infos
+    depends_on:
+      - mysql_db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_db/mediscreen?useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    ports:
+      - "8081:8081"
+    restart: always
+
+  practitionnernote:
+    image: practitionner_note:1.0
+    build:
+      context: Mediscreen_practitionner_notes
+    depends_on:
+      - mongodb
+    environment:
+      SPRING_DATA_MONGODB_HOST: mongodb
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_DATABASE: mediscreennotes
+    ports:
+      - "8082:8082"
+    restart: always
+
+  risk:
+    image: risk:1.0
+    build:
+      context: Mediscreen_risks
+    depends_on:
+      - mysql_db  
+      - mongodb
+    ports:
+      - "8083:8083"
+    restart: always
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_db/mediscreen?useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      SPRING_DATA_MONGODB_HOST: mongodb
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_DATABASE: mediscreennotes   
+      
+
+volumes:
+  mysql_db_data: {}
+  mongo_db_data: {}
+  mongo_config: {}

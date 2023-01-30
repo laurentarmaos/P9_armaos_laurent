@@ -9,17 +9,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.mediscreen.beans.NoteBean;
 import com.mediscreen.beans.PatientBean;
-import com.mediscreen.proxies.NotesProxy;
 import com.mediscreen.services.MediscreenNoteService;
 
 @Controller
 public class MediscreenNoteController {
-	
-	private final NotesProxy notesProxy;
+
 	private final MediscreenNoteService noteService;
 	
-	public MediscreenNoteController(NotesProxy notesProxy, MediscreenNoteService noteService) {
-		this.notesProxy = notesProxy;
+	public MediscreenNoteController(MediscreenNoteService noteService) {
 		this.noteService = noteService;
 	}
 	
@@ -35,8 +32,7 @@ public class MediscreenNoteController {
 	
 	@PostMapping("/patient/{patientId}/validateAdd")
 	public String addNote(@ModelAttribute("noteBean") NoteBean noteBean, @PathVariable("patientId") String patientId) {
-		
-		//notesProxy.addNote(noteBean);
+
 		noteService.addNote(noteBean);
 		return "redirect:/";
 	}

@@ -8,20 +8,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.mediscreen.beans.PatientBean;
-import com.mediscreen.proxies.PatientProxy;
+import com.mediscreen.services.MediscreenPatientService;
 
 @Controller
 public class MediscreenController {
 	
-	private final PatientProxy patientProxy;
+	private final MediscreenPatientService patientService;
 	
-	public MediscreenController(PatientProxy patientProxy) {
-		this.patientProxy = patientProxy;
+	public MediscreenController(MediscreenPatientService patientService) {
+		this.patientService = patientService;
 	}
 
 	@GetMapping("/")
@@ -32,7 +29,7 @@ public class MediscreenController {
 	  
 	@GetMapping("/patients")
 	public String findAllPatients(Model model) {
-		List<PatientBean> patients = patientProxy.findAllPatients();
+		List<PatientBean> patients = patientService.findAllPatients();
 		model.addAttribute("patients", patients);
 		  
 		return "patients";
@@ -40,7 +37,7 @@ public class MediscreenController {
 	  
 	@GetMapping("/patient/{id}")
 	public String findPatient(@PathVariable("id") Long id, Model model) {
-		PatientBean patient = patientProxy.findPatient(id);
+		PatientBean patient = patientService.findPatient(id);
 		model.addAttribute("patient", patient);
 		  
 		return "patient";
@@ -56,8 +53,8 @@ public class MediscreenController {
 	  
 	@PostMapping("/patient/validateAdd")
 	public String addPatient(@ModelAttribute("patient") PatientBean patientBean, Model model) {
-		patientProxy.addPatient(patientBean);
-		model.addAttribute("patients", patientProxy.findAllPatients());
+		patientService.addPatient(patientBean);
+		model.addAttribute("patients", patientService.findAllPatients());
 		  
 		return "redirect:/patients";
 	 }
@@ -65,16 +62,16 @@ public class MediscreenController {
 	@GetMapping("/patient/{patientId}/update")
 	public String updatePatientForm(@PathVariable("patientId") Long patientId, Model model) {
 		
-		model.addAttribute("patient", patientProxy.findPatient(patientId));
+		model.addAttribute("patient", patientService.findPatient(patientId));
 		
 		return "updatePatient";
 	}
 	
 	@PostMapping("/patient/{patientId}/validateUpdate")
 	public String updatePatient(@PathVariable("patientId") Long patientId, @ModelAttribute("patient") PatientBean patientBean, Model model) {
-		patientProxy.updatePatient(patientBean);
+		patientService.updatePatient(patientBean);
 		
-		model.addAttribute("patients", patientProxy.findAllPatients());
+		model.addAttribute("patients", patientService.findAllPatients());
 		
 		return "redirect:/patients";
 	}
@@ -82,7 +79,7 @@ public class MediscreenController {
 	  
 	@GetMapping("/patient/{patientId}/delete")
 	public String deletePatient(@PathVariable("patientId") Long patientId) {
-		patientProxy.deletePatient(patientId);
+		patientService.deletePatient(patientId);
 		  
 		return "redirect:/patients";
 	}
