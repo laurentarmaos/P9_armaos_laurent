@@ -12,11 +12,35 @@
 
 	<div th:each="patient : ${patients}">
 	
-		<p th:text="${patient.firstName}"></p>
-		<p th:text="${patient.lastName}"></p>
-		<p th:text="${patient.birthDate}"></p>
-		<p th:text="${patient.gender}"></p>
-		<a th:href="@{/patient/{id}(id=${patient.patientId})}">See patient</a>
+		<table>
+			<thead>
+				<tr>
+		            <th colspan="2">[[${patient.lastName}]] [[${patient.firstName}]]</th>
+		        </tr>
+			</thead>
+			<tbody>
+				<tr>
+		            <td><b>Birth date</b></td>
+		            <td th:text="${patient.birthDate}"></td>
+		        </tr>
+		        <tr>
+		            <td><b>Gender</b></td>
+		            <td th:text="${patient.gender}"></td>
+		        </tr>
+		        <tr>
+		            <td><b>Phone</b></td>
+		            <td th:text="${patient.phone}"></td>
+		        </tr>
+		        <tr>
+		            <td><b>Address</b></td>
+		            <td th:text="${patient.address}"></td>
+		        </tr>
+		        <tr>
+		        	<td colspan="2" ><a th:href="@{/patient/{id}(id=${patient.patientId})}">See patient</a></td> 
+		        </tr>
+			</tbody>
+		</table>
+		<br>
 	</div>
 
 </body>

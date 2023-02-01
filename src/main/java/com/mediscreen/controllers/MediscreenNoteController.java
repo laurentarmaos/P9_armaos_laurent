@@ -1,5 +1,7 @@
 package com.mediscreen.controllers;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,14 +12,28 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.mediscreen.beans.NoteBean;
 import com.mediscreen.beans.PatientBean;
 import com.mediscreen.services.MediscreenNoteService;
+import com.mediscreen.services.MediscreenPatientService;
 
 @Controller
 public class MediscreenNoteController {
 
 	private final MediscreenNoteService noteService;
+	private final MediscreenPatientService patientService;
 	
-	public MediscreenNoteController(MediscreenNoteService noteService) {
+	public MediscreenNoteController(MediscreenNoteService noteService, MediscreenPatientService patientService) {
 		this.noteService = noteService;
+		this.patientService = patientService;
+	}
+	
+	
+	@GetMapping("/patient/{patientId}/findnotes")
+	public String getNote(@PathVariable("patientId") String patientId, Model model) {
+
+		List<NoteBean> notes = noteService.findNoteByPatientId(patientId);
+		//System.out.println(notes.get(0).getPractitionnerNotes());
+		
+		model.addAttribute("notes", notes);
+		return "patientnote";
 	}
 	
 	@GetMapping("/patient/{patientId}/addnote")

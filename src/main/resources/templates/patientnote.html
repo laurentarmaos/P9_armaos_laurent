@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+   <title>Mediscreen</title>
+
+</head>
+
+<body>
+	<div class="container">
+	   
+	</div>
+	
+	<div th:each="note : ${notes}">
+		
+		<p th:text = "${note.practitionnerNotes}"></p>
+	
+	</div>
+
+</body>
+</html>

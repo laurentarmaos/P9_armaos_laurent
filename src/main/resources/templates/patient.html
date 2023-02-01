@@ -9,19 +9,44 @@
 	<div class="container">
 	   <h1 th:inline="text">Patient [[${patient.lastName}]] [[${patient.firstName}]]</h1>
 	</div>
-
-	<p th:text="${patient.firstName}"></p>
-	<p th:text="${patient.lastName}"></p>
-	<p th:text="${patient.birthDate}"></p>
-	<p th:text="${patient.gender}"></p>
 	
-	<a th:href="@{/patient/{id}/addnote(id=${patient.patientId})}" >add notes</a>
-	<br>
-	<a th:href="@{/patient/{id}/update(id=${patient.patientId})}" >update patient</a>
-	<br>
-	<!--  <a th:href="@{/patient/{id}/delete(id=${patient.patientId})}" >delete patient</a> -->
-	<br>
-	<a th:href="@{/assess/{id}(id=${patient.patientId})}" >diabete risk</a>
+	<table>
+			<thead>
+				<tr>
+		            <th colspan="2">[[${patient.lastName}]] [[${patient.firstName}]]</th>
+		        </tr>
+			</thead>
+			<tbody>
+				<tr>
+		            <td><b>Birthdate</b></td>
+		            <td th:text="${patient.birthDate}"></td>
+		        </tr>
+		        <tr>
+		            <td><b>Gender</b></td>
+		            <td th:text="${patient.gender}"></td>
+		        </tr>
+		        <tr>
+		            <td><b>Phone</b></td>
+		            <td th:text="${patient.phone}"></td>
+		        </tr>
+		        <tr>
+		            <td><b>Address</b></td>
+		            <td th:text="${patient.address}"></td>
+		        </tr>
+		        <tr>
+		        	<td colspan="2" ><a th:href="@{/patient/{id}/addnote(id=${patient.patientId})}">Add notes</a></td> 
+		        </tr>
+		        <tr>
+		        	<td colspan="2" ><a th:href="@{/assess/{id}(id=${patient.patientId})}">Diabete risk</a></td>
+		        </tr>
+		        <tr>
+		        	 <td colspan="2" ><a th:href="@{/patient/{id}/update(id=${patient.patientId})}">Update patient</a></td>
+		        </tr>
+		        <tr>
+		        	 <td colspan="2" ><a th:href="@{/patient/{id}/delete(id=${patient.patientId})}">Delete patient</a></td>
+		        </tr>
+			</tbody>
+		</table>
 
 </body>
 </html>
