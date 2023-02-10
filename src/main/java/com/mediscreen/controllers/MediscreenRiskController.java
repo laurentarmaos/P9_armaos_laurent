@@ -25,11 +25,16 @@ public class MediscreenRiskController {
 	public String evaluateRisk(@PathVariable("patientId") Long patientId, Model model) {
 		
 		PatientBean patient = riskService.findPatient(patientId);
-		model.addAttribute("patient", patient);
-		model.addAttribute("risk", riskService.evaluateRisk(patientId));
-		model.addAttribute("agePatient", riskService.getAge(patientId));
+		if(patient!=null) {
+			model.addAttribute("patient", patient);
+			model.addAttribute("risk", riskService.evaluateRisk(patientId));
+			model.addAttribute("agePatient", riskService.getAge(patientId));
+			
+			return "diabeteRisk";
+		}else {
+			return "redirect:/patients";
+		}
 		
-		return "diabeteRisk";
 	}
 
 }

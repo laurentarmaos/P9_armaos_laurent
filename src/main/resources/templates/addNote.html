@@ -7,7 +7,7 @@
 
 <body>
 	<div class="container">
-	   <h1 th:inline="text">Add note for patient N°[[${patientBean.patientId}]]</h1>
+	   <h1 th:inline="text">Add note for [[${patientBean.firstName}]] [[${patientBean.lastName}]]</h1>
 	</div>
 
 	<form action="#" th:action="@{/patient/{patientId}/validateAdd(patientId=${patientBean.patientId})}" th:object="${noteBean}" method="post">

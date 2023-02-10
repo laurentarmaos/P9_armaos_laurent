@@ -37,11 +37,22 @@ public class MediscreenRiskControllerTest {
 		PatientBean patient = new PatientBean();
 		patient.setPatientId((long) 1);
 		
+		Long wrongId = (long) 2;
+		
 		when(mediscreenRiskService.evaluateRisk((long) 1)).thenReturn("risk");
+		
+		when(mediscreenRiskService.findPatient((long) 1)).thenReturn(patient);
+		
+		when(mediscreenRiskService.findPatient(wrongId)).thenReturn(null);
 		
 		mockMvc.perform(MockMvcRequestBuilders.get(
 				"/assess/{patientId}",
 				patient.getPatientId()
 			)).andExpect(status().isOk());
+		
+		mockMvc.perform(MockMvcRequestBuilders.get(
+				"/assess/{patientId}",
+				wrongId
+			)).andExpect(status().is3xxRedirection());
 	}
 }

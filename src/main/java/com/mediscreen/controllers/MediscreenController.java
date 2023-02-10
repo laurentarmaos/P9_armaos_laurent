@@ -38,9 +38,15 @@ public class MediscreenController {
 	@GetMapping("/patient/{id}")
 	public String findPatient(@PathVariable("id") Long id, Model model) {
 		PatientBean patient = patientService.findPatient(id);
-		model.addAttribute("patient", patient);
-		  
-		return "patient";
+		
+		if(patient!=null) {
+			model.addAttribute("patient", patient);
+			  
+			return "patient";
+		}else {
+			return "redirect:/patients";
+		}
+
 	}
 	  
 	@GetMapping("/patient/add")
@@ -62,9 +68,17 @@ public class MediscreenController {
 	@GetMapping("/patient/{patientId}/update")
 	public String updatePatientForm(@PathVariable("patientId") Long patientId, Model model) {
 		
-		model.addAttribute("patient", patientService.findPatient(patientId));
+		PatientBean patient = patientService.findPatient(patientId);
 		
-		return "updatePatient";
+		if(patient!=null) {
+			model.addAttribute("patient", patient);
+			
+			return "updatePatient";
+		}else {
+			return "redirect:/patients";
+		}
+		
+		
 	}
 	
 	@PostMapping("/patient/{patientId}/validateUpdate")
@@ -79,9 +93,17 @@ public class MediscreenController {
 	  
 	@GetMapping("/patient/{patientId}/delete")
 	public String deletePatient(@PathVariable("patientId") Long patientId) {
-		patientService.deletePatient(patientId);
-		  
-		return "redirect:/patients";
+		PatientBean patient = patientService.findPatient(patientId);
+		
+		if(patient!=null) {
+			patientService.deletePatient(patientId);
+			  
+			return "redirect:/patients";
+		}else {
+			return "redirect:/patients";
+		}
+		
+		
 	}
 	  
 	  

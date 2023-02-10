@@ -44,12 +44,21 @@ public class MediscreenPatientControllerTest {
 		PatientBean patient = new PatientBean();
 		patient.setPatientId((long) 1);
 		
+		Long wrongId = (long) 2;
+		
 		when(mediscreenPatientService.findPatient((long) 1)).thenReturn(patient);
+		
+		when(mediscreenPatientService.findPatient(wrongId)).thenReturn(null);
 		
 		mockMvc.perform(MockMvcRequestBuilders.get(
 				"/patient/{id}",
 				patient.getPatientId()
 			)).andExpect(status().isOk());
+		
+		mockMvc.perform(MockMvcRequestBuilders.get(
+				"/patient/{id}",
+				wrongId
+			)).andExpect(status().is3xxRedirection());
 	}
 	
 	@Test
@@ -78,10 +87,21 @@ public class MediscreenPatientControllerTest {
 		PatientBean patient = new PatientBean();
 		patient.setPatientId((long) 1);
 		
+		Long wrongId = (long) 2;
+		
+		when(mediscreenPatientService.findPatient((long) 1)).thenReturn(patient);
+		
+		when(mediscreenPatientService.findPatient(wrongId)).thenReturn(null);
+		
 		mockMvc.perform(MockMvcRequestBuilders.get(
 				"/patient/{patientId}/update",
 				patient.getPatientId()
 			)).andExpect(status().isOk());
+		
+		mockMvc.perform(MockMvcRequestBuilders.get(
+				"/patient/{patientId}/update",
+				wrongId
+			)).andExpect(status().is3xxRedirection());
 	}
 	
 	@Test

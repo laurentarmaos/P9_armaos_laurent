@@ -29,28 +29,49 @@ public class MediscreenNoteController {
 	@GetMapping("/patient/{patientId}/findnotes")
 	public String getNote(@PathVariable("patientId") String patientId, Model model) {
 
-		List<NoteBean> notes = noteService.findNoteByPatientId(patientId);
-		//System.out.println(notes.get(0).getPractitionnerNotes());
+		try {
+			List<NoteBean> notes = noteService.findNoteByPatientId(patientId);
+			//System.out.println(notes.get(0).getPractitionnerNotes());
+			
+			model.addAttribute("notes", notes);
+			return "patientnote";
+		} catch (Exception e) {
+			return "redirect:/patients";
+		}
 		
-		model.addAttribute("notes", notes);
-		return "patientnote";
+		
 	}
 	
 	@GetMapping("/patient/{patientId}/addnote")
 	public String addNoteForm(@PathVariable("patientId") Long patientId, Model model) {
 		
-		PatientBean patientBean = new PatientBean(patientId);
-		model.addAttribute("patientBean", patientBean);
-		model.addAttribute("noteBean", new NoteBean());
+		PatientBean patientBean = patientService.findPatient(patientId);
+			
+		if(patientBean!=null) {
+			model.addAttribute("patientBean", patientBean);
+			model.addAttribute("noteBean", new NoteBean());
+			return "addNote";
+		}else {
+			return "redirect:/patients";
+		}
 		
-		return "addNote";
+		
 	}
 	
 	@PostMapping("/patient/{patientId}/validateAdd")
-	public String addNote(@ModelAttribute("noteBean") NoteBean noteBean, @PathVariable("patientId") String patientId) {
+	public String addNote(@ModelAttribute("noteBean") NoteBean noteBean, @PathVariable("patientId") String patientId, Model model) {
 
-		noteService.addNote(noteBean);
-		return "redirect:/";
+		try {
+			noteService.addNote(noteBean);
+			return "redirect:/";
+		} catch (Exception e) {
+			Long id = Long.parseLong(patientId);
+			PatientBean patientBean = new PatientBean(id);
+			model.addAttribute("patientBean", patientBean);
+			return "addNote";
+		}
+		
+		
 	}
 	
 }

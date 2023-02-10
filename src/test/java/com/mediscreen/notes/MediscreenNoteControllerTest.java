@@ -13,8 +13,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.mediscreen.beans.NoteBean;
 import com.mediscreen.beans.PatientBean;
+import com.mediscreen.controllers.MediscreenController;
 import com.mediscreen.controllers.MediscreenNoteController;
 import com.mediscreen.services.MediscreenNoteService;
+import com.mediscreen.services.MediscreenPatientService;
 
 @SpringBootTest
 public class MediscreenNoteControllerTest {
@@ -22,13 +24,16 @@ public class MediscreenNoteControllerTest {
 	@MockBean
 	private MediscreenNoteService mediscreenNoteService;
 	
+	@MockBean
+	private MediscreenPatientService mediscreenPatientService;
+	
 	private MediscreenNoteController mediscreenNoteController;
 	
 	private MockMvc mockMvc;
 	
 	@BeforeEach
 	public void setUp() {
-		mediscreenNoteController = new MediscreenNoteController(mediscreenNoteService);
+		mediscreenNoteController = new MediscreenNoteController(mediscreenNoteService, mediscreenPatientService);
 		mockMvc = MockMvcBuilders.standaloneSetup(mediscreenNoteController).build();
 	}
 	
@@ -37,10 +42,22 @@ public class MediscreenNoteControllerTest {
 		PatientBean patient = new PatientBean();
 		patient.setPatientId((long) 1);
 		
+		Long wrongId = (long) 2;
+		
+		when(mediscreenPatientService.findPatient((long) 1)).thenReturn(patient);
+		
+		when(mediscreenPatientService.findPatient(wrongId)).thenReturn(null);
+		
+		
 		mockMvc.perform(MockMvcRequestBuilders.get(
 				"/patient/{patientId}/addnote",
 				patient.getPatientId()
 			)).andExpect(status().isOk());
+		
+		mockMvc.perform(MockMvcRequestBuilders.get(
+				"/patient/{patientId}/addnote",
+				wrongId
+			)).andExpect(status().is3xxRedirection());
 	}
 	
 	
@@ -49,6 +66,7 @@ public class MediscreenNoteControllerTest {
 		NoteBean note = new NoteBean();
 		note.setPatientId("1");
 		note.setPractitionnerNotes("note");
+		
 		
 		when(mediscreenNoteService.addNote(note)).thenReturn(note);
 		
