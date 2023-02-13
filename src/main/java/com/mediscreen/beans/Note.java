@@ -1,6 +1,6 @@
 package com.mediscreen.beans;
 
-public class NoteBean {
+public class Note {
 
 	private String id;
 	
@@ -8,7 +8,7 @@ public class NoteBean {
 
 	private String patientId;
 	
-	public NoteBean() {}
+	public Note() {}
 
 	public String getId() {
 		return id;

@@ -2,11 +2,17 @@ package com.mediscreen.services;
 
 import java.util.List;
 
-import com.mediscreen.beans.NoteBean;
+import com.mediscreen.beans.Note;
 
 public interface MediscreenNoteService {
 
-	public List<NoteBean> findNoteByPatientId(String patientId);
+	public List<Note> findNoteByPatientId(String patientId);
 	
-	public NoteBean addNote(NoteBean noteBean);
+	public Note addNote(Note noteBean);
+	
+	public Note updateNote(Note note);
+	
+	public void deleteNote(String noteId);
+	
+	public Note findNote(String noteId);
 }

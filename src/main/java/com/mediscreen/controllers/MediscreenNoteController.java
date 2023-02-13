@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.mediscreen.beans.NoteBean;
+import com.mediscreen.beans.Note;
 import com.mediscreen.beans.PatientBean;
 import com.mediscreen.services.MediscreenNoteService;
 import com.mediscreen.services.MediscreenPatientService;
@@ -28,18 +28,19 @@ public class MediscreenNoteController {
 	
 	@GetMapping("/patient/{patientId}/findnotes")
 	public String getNote(@PathVariable("patientId") String patientId, Model model) {
-
-		try {
-			List<NoteBean> notes = noteService.findNoteByPatientId(patientId);
-			//System.out.println(notes.get(0).getPractitionnerNotes());
+		
+		PatientBean patientBean = patientService.findPatient(Long.parseLong(patientId));
+		
+		if(patientBean != null) {
+			List<Note> notes = noteService.findNoteByPatientId(patientId);
 			
 			model.addAttribute("notes", notes);
+			model.addAttribute("patient", patientBean);
 			return "patientnote";
-		} catch (Exception e) {
+		}else {
 			return "redirect:/patients";
 		}
-		
-		
+	
 	}
 	
 	@GetMapping("/patient/{patientId}/addnote")
@@ -49,17 +50,16 @@ public class MediscreenNoteController {
 			
 		if(patientBean!=null) {
 			model.addAttribute("patientBean", patientBean);
-			model.addAttribute("noteBean", new NoteBean());
+			model.addAttribute("noteBean", new Note());
 			return "addNote";
 		}else {
 			return "redirect:/patients";
 		}
-		
-		
+			
 	}
 	
 	@PostMapping("/patient/{patientId}/validateAdd")
-	public String addNote(@ModelAttribute("noteBean") NoteBean noteBean, @PathVariable("patientId") String patientId, Model model) {
+	public String addNote(@ModelAttribute("noteBean") Note noteBean, @PathVariable("patientId") String patientId, Model model) {
 
 		try {
 			noteService.addNote(noteBean);
@@ -69,9 +69,44 @@ public class MediscreenNoteController {
 			PatientBean patientBean = new PatientBean(id);
 			model.addAttribute("patientBean", patientBean);
 			return "addNote";
-		}
-		
+		}	
 		
 	}
 	
+	@GetMapping("/patient/{patientId}/note/{noteId}/update")
+	public String updateNoteForm(@PathVariable("patientId") Long patientId, @PathVariable("noteId") String noteId,  Model model) {
+		PatientBean patientBean = patientService.findPatient(patientId);
+		Note note = noteService.findNote(noteId);
+		
+		if(patientBean!=null && note!=null) {
+			model.addAttribute("patientBean", patientBean);
+			model.addAttribute("note", note);
+			return "updateNote";
+		}else {
+			return "redirect:/patients";
+		}
+	}
+	
+	
+	@PostMapping("/patient/{patientId}/note/{id}/validateupdate")
+	public String updateNote(@ModelAttribute("noteBean") Note note, @PathVariable("patientId") String patientId, @PathVariable("id") String id, Model model) {
+		try {
+			noteService.updateNote(note);
+			return "redirect:/";
+		} catch (Exception e) {
+			return "redirect:/patients";
+		}
+	}
+	
+	@GetMapping("/note/{noteId}/delete")
+	public String deleteNote(@PathVariable("noteId") String noteId) {
+		Note note = noteService.findNote(noteId);
+		
+		if(note!=null) {
+			noteService.deleteNote(noteId);
+			return "redirect:/patients";
+		}else {
+			return "redirect:/patients";
+		}
+	}
 }

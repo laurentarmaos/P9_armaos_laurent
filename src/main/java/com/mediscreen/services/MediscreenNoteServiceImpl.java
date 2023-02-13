@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.mediscreen.beans.NoteBean;
+import com.mediscreen.beans.Note;
 import com.mediscreen.proxies.NotesProxy;
 
 @Service
@@ -18,16 +18,38 @@ public class MediscreenNoteServiceImpl implements MediscreenNoteService {
 
 	
 	@Override
-	public List<NoteBean> findNoteByPatientId(String patientId) {
+	public List<Note> findNoteByPatientId(String patientId) {
 		
-		System.out.println("note : " + noteProxy.findNoteByPatientId(patientId).get(0).getPractitionnerNotes());
 		return noteProxy.findNoteByPatientId(patientId);
 	}
 	
 	@Override
-	public NoteBean addNote(NoteBean noteBean) {	
-		return noteProxy.addNote(noteBean.getPractitionnerNotes(), noteBean.getPatientId());
+	public Note addNote(Note note) {	
+		return noteProxy.addNote(note.getPractitionnerNotes(), note.getPatientId());
 	}
 
+
+	@Override
+	public Note updateNote(Note note) {
+
+		return noteProxy.updateNote(note);
+	}
+
+
+	@Override
+	public void deleteNote(String noteId) {
+		noteProxy.deleteNote(noteId);
+		
+	}
+
+
+	@Override
+	public Note findNote(String noteId) {
+		
+		return noteProxy.findNote(noteId);
+	}
+
+	
+	
 
 }

@@ -7,13 +7,15 @@
 
 <body>
 	<div class="container">
-	   
+	   <h1> Notes for [[${patient.firstName}]] [[${patient.lastName}]] </h1>
 	</div>
 	
 	<div th:each="note : ${notes}">
 		
 		<p th:text = "${note.practitionnerNotes}"></p>
-	
+		<a th:href="@{/patient/{patientId}/note/{noteId}/update(patientId=${patient.patientId}, noteId=${note.id})}">Update note</a>
+		<br>
+		<a th:href="@{/note/{noteId}/delete(noteId=${note.id})}">Delete note</a>
 	</div>
 
 </body>

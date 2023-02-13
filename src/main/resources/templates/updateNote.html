@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+   <title>Mediscreen</title>
+
+</head>
+
+<body>
+	<div class="container">
+	   <h1 th:inline="text">Update note for [[${patientBean.firstName}]] [[${patientBean.lastName}]]</h1>
+	</div>
+
+	<form action="#" th:action="@{/patient/{patientId}/note/{id}/validateupdate(patientId=${patientBean.patientId}, id=${note.id})}" th:object="${note}" method="post">
+		
+		<label for="practitionnerNotes">Notes</label>
+		<textarea th:field="*{practitionnerNotes}" placeholder="Notes" required></textarea>
+		
+		<input type="submit" value="Update Note">
+	</form>
+
+</body>
+</html>

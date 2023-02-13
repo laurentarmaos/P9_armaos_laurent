@@ -4,6 +4,9 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -123,11 +126,17 @@ public class MediscreenPatientControllerTest {
 		PatientBean patient = new PatientBean();
 		patient.setPatientId((long) 1);
 		
-		doNothing().when(mediscreenPatientService).deletePatient((long) 1);
+		when(mediscreenPatientService.findPatient((long) 1)).thenReturn(patient);
+		when(mediscreenPatientService.findPatient((long) 2)).thenReturn(null);
 		
 		mockMvc.perform(MockMvcRequestBuilders.get(
 				"/patient/{patientId}/delete",
 				patient.getPatientId()
+			)).andExpect(status().is3xxRedirection());
+		
+		mockMvc.perform(MockMvcRequestBuilders.get(
+				"/patient/{patientId}/delete",
+				(long) 2
 			)).andExpect(status().is3xxRedirection());
 	}
 }
