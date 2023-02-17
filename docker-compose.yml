@@ -10,7 +10,10 @@ services:
       - "3308:3306"
     environment:
       MYSQL_DATABASE: mediscreen
+      MYSQL_ROOT_USERNAME: root
       MYSQL_ROOT_PASSWORD: root
+    networks:
+      - mediscreen-network
     cap_add:
       - SYS_NICE
 
@@ -26,11 +29,10 @@ services:
   mediscreen:
     depends_on:
       - patientinfos
-      - practitionnernotes
-      - risks
-    image: mediscreen:1.0
-    build:
-      context: mediscreen
+      - practitionnernote
+      - risk
+    image: mediscreen
+    container_name: mediscreen
     ports:
       - "8080:8080"
     restart: always
@@ -38,11 +40,12 @@ services:
       PATIENT_INFO_PROXY_URL: http://patientinfos:8081
       PRACTITIONNER_NOTE_PROXY_URL: http://practitionnernotes:8082
       RISK_PROXY_URL: http://risks:8083
+    networks:
+      - mediscreen-network
 
   patientinfos:
-    image: patient_info:1.0
-    build:
-      context: Mediscreen_patient_basic_infos
+    image: patientinfos
+    container_name: patientinfos
     depends_on:
       - mysql_db
     environment:
@@ -52,11 +55,12 @@ services:
     ports:
       - "8081:8081"
     restart: always
+    networks:
+      - mediscreen-network
 
   practitionnernote:
-    image: practitionner_note:1.0
-    build:
-      context: Mediscreen_practitionner_notes
+    image: practitionnernote
+    container_name: practitionnernote
     depends_on:
       - mongodb
     environment:
@@ -66,21 +70,27 @@ services:
     ports:
       - "8082:8082"
     restart: always
+    networks:
+      - mediscreen-network
 
   risk:
-    image: risk:1.0
-    build:
-      context: Mediscreen_risks
+    image: risk
+    container_name: risk
     depends_on:
-      - mysql_db  
-      - mongodb
+      - patientinfos
+      - practitionnernote
     ports:
       - "8083:8083"
     restart: always
     environment:
       PATIENT_INFO_PROXY_URL: http://patientinfos:8081
-      PRACTITIONNER_NOTE_PROXY_URL: http://practitionnernotes:8082   
-      
+      PRACTITIONNER_NOTE_PROXY_URL: http://practitionnernotes:8082
+    networks:
+      - mediscreen-network   
+
+networks:
+  mediscreen-network:
+    driver: bridge      
 
 volumes:
   mysql_db_data: {}
