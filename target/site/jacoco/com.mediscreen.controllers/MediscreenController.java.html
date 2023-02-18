@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MediscreenController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Mediscreen</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.controllers</a> &gt; <span class="el_source">MediscreenController.java</span></div><h1>MediscreenController.java</h1><pre class="source lang-java linenums">package com.mediscreen.controllers;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import com.mediscreen.beans.PatientBean;
+import com.mediscreen.services.MediscreenPatientService;
+
+@Controller
+public class MediscreenController {
+	
+	private final MediscreenPatientService patientService;
+	
+<span class="fc" id="L20">	public MediscreenController(MediscreenPatientService patientService) {</span>
+<span class="fc" id="L21">		this.patientService = patientService;</span>
+<span class="fc" id="L22">	}</span>
+
+	@GetMapping(&quot;/&quot;)
+	public String accueil(Model model)
+	{
+<span class="fc" id="L27">	    return &quot;accueil&quot;;</span>
+    }
+	  
+	@GetMapping(&quot;/patients&quot;)
+	public String findAllPatients(Model model) {
+<span class="nc" id="L32">		List&lt;PatientBean&gt; patients = patientService.findAllPatients();</span>
+<span class="nc" id="L33">		model.addAttribute(&quot;patients&quot;, patients);</span>
+		  
+<span class="nc" id="L35">		return &quot;patients&quot;;</span>
+	}
+	  
+	@GetMapping(&quot;/patient/{id}&quot;)
+	public String findPatient(@PathVariable(&quot;id&quot;) Long id, Model model) {
+<span class="fc" id="L40">		PatientBean patient = patientService.findPatient(id);</span>
+		
+<span class="fc bfc" id="L42" title="All 2 branches covered.">		if(patient!=null) {</span>
+<span class="fc" id="L43">			model.addAttribute(&quot;patient&quot;, patient);</span>
+			  
+<span class="fc" id="L45">			return &quot;patient&quot;;</span>
+		}else {
+<span class="fc" id="L47">			return &quot;redirect:/patients&quot;;</span>
+		}
+
+	}
+	  
+	@GetMapping(&quot;/patient/add&quot;)
+	public String addPatientForm(Model model) {
+	
+<span class="fc" id="L55">		model.addAttribute(&quot;patient&quot;, new PatientBean());</span>
+		  
+<span class="fc" id="L57">		return &quot;addPatient&quot;;</span>
+	}
+	  
+	@PostMapping(&quot;/patient/validateAdd&quot;)
+	public String addPatient(@ModelAttribute(&quot;patient&quot;) PatientBean patientBean, Model model) {
+<span class="fc" id="L62">		patientService.addPatient(patientBean);</span>
+<span class="fc" id="L63">		model.addAttribute(&quot;patients&quot;, patientService.findAllPatients());</span>
+		  
+<span class="fc" id="L65">		return &quot;redirect:/patients&quot;;</span>
+	 }
+	
+	@GetMapping(&quot;/patient/{patientId}/update&quot;)
+	public String updatePatientForm(@PathVariable(&quot;patientId&quot;) Long patientId, Model model) {
+		
+<span class="fc" id="L71">		PatientBean patient = patientService.findPatient(patientId);</span>
+		
+<span class="fc bfc" id="L73" title="All 2 branches covered.">		if(patient!=null) {</span>
+<span class="fc" id="L74">			model.addAttribute(&quot;patient&quot;, patient);</span>
+			
+<span class="fc" id="L76">			return &quot;updatePatient&quot;;</span>
+		}else {
+<span class="fc" id="L78">			return &quot;redirect:/patients&quot;;</span>
+		}
+		
+		
+	}
+	
+	@PostMapping(&quot;/patient/{patientId}/validateUpdate&quot;)
+	public String updatePatient(@PathVariable(&quot;patientId&quot;) Long patientId, @ModelAttribute(&quot;patient&quot;) PatientBean patientBean, Model model) {
+<span class="fc" id="L86">		patientService.updatePatient(patientBean);</span>
+		
+<span class="fc" id="L88">		model.addAttribute(&quot;patients&quot;, patientService.findAllPatients());</span>
+		
+<span class="fc" id="L90">		return &quot;redirect:/patients&quot;;</span>
+	}
+	  
+	  
+	@GetMapping(&quot;/patient/{patientId}/delete&quot;)
+	public String deletePatient(@PathVariable(&quot;patientId&quot;) Long patientId) {
+<span class="fc" id="L96">		PatientBean patient = patientService.findPatient(patientId);</span>
+		
+<span class="fc bfc" id="L98" title="All 2 branches covered.">		if(patient!=null) {</span>
+<span class="fc" id="L99">			patientService.deletePatient(patientId);</span>
+			  
+<span class="fc" id="L101">			return &quot;redirect:/patients&quot;;</span>
+		}else {
+<span class="fc" id="L103">			return &quot;redirect:/patients&quot;;</span>
+		}
+		
+		
+	}
+	  
+	  
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

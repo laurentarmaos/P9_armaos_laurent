@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MediscreenNoteController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Mediscreen</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.controllers</a> &gt; <span class="el_source">MediscreenNoteController.java</span></div><h1>MediscreenNoteController.java</h1><pre class="source lang-java linenums">package com.mediscreen.controllers;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import com.mediscreen.beans.Note;
+import com.mediscreen.beans.PatientBean;
+import com.mediscreen.services.MediscreenNoteService;
+import com.mediscreen.services.MediscreenPatientService;
+
+@Controller
+public class MediscreenNoteController {
+
+	private final MediscreenNoteService noteService;
+	private final MediscreenPatientService patientService;
+	
+<span class="fc" id="L23">	public MediscreenNoteController(MediscreenNoteService noteService, MediscreenPatientService patientService) {</span>
+<span class="fc" id="L24">		this.noteService = noteService;</span>
+<span class="fc" id="L25">		this.patientService = patientService;</span>
+<span class="fc" id="L26">	}</span>
+	
+	
+	@GetMapping(&quot;/patient/{patientId}/findnotes&quot;)
+	public String getNote(@PathVariable(&quot;patientId&quot;) String patientId, Model model) {
+		
+<span class="fc" id="L32">		PatientBean patientBean = patientService.findPatient(Long.parseLong(patientId));</span>
+		
+<span class="fc bfc" id="L34" title="All 2 branches covered.">		if(patientBean != null) {</span>
+<span class="fc" id="L35">			List&lt;Note&gt; notes = noteService.findNoteByPatientId(patientId);</span>
+			
+<span class="fc" id="L37">			model.addAttribute(&quot;notes&quot;, notes);</span>
+<span class="fc" id="L38">			model.addAttribute(&quot;patient&quot;, patientBean);</span>
+<span class="fc" id="L39">			return &quot;patientnote&quot;;</span>
+		}else {
+<span class="fc" id="L41">			return &quot;redirect:/patients&quot;;</span>
+		}
+	
+	}
+	
+	@GetMapping(&quot;/patient/{patientId}/addnote&quot;)
+	public String addNoteForm(@PathVariable(&quot;patientId&quot;) Long patientId, Model model) {
+		
+<span class="fc" id="L49">		PatientBean patientBean = patientService.findPatient(patientId);</span>
+			
+<span class="fc bfc" id="L51" title="All 2 branches covered.">		if(patientBean!=null) {</span>
+<span class="fc" id="L52">			model.addAttribute(&quot;patientBean&quot;, patientBean);</span>
+<span class="fc" id="L53">			model.addAttribute(&quot;noteBean&quot;, new Note());</span>
+<span class="fc" id="L54">			return &quot;addNote&quot;;</span>
+		}else {
+<span class="fc" id="L56">			return &quot;redirect:/patients&quot;;</span>
+		}
+			
+	}
+	
+	@PostMapping(&quot;/patient/{patientId}/validateAdd&quot;)
+	public String addNote(@ModelAttribute(&quot;noteBean&quot;) Note noteBean, @PathVariable(&quot;patientId&quot;) String patientId, Model model) {
+
+		try {
+<span class="fc" id="L65">			noteService.addNote(noteBean);</span>
+<span class="fc" id="L66">			return &quot;redirect:/&quot;;</span>
+<span class="nc" id="L67">		} catch (Exception e) {</span>
+<span class="nc" id="L68">			Long id = Long.parseLong(patientId);</span>
+<span class="nc" id="L69">			PatientBean patientBean = new PatientBean(id);</span>
+<span class="nc" id="L70">			model.addAttribute(&quot;patientBean&quot;, patientBean);</span>
+<span class="nc" id="L71">			return &quot;addNote&quot;;</span>
+		}	
+		
+	}
+	
+	@GetMapping(&quot;/patient/{patientId}/note/{noteId}/update&quot;)
+	public String updateNoteForm(@PathVariable(&quot;patientId&quot;) Long patientId, @PathVariable(&quot;noteId&quot;) String noteId,  Model model) {
+<span class="nc" id="L78">		PatientBean patientBean = patientService.findPatient(patientId);</span>
+<span class="nc" id="L79">		Note note = noteService.findNote(noteId);</span>
+		
+<span class="nc bnc" id="L81" title="All 4 branches missed.">		if(patientBean!=null &amp;&amp; note!=null) {</span>
+<span class="nc" id="L82">			model.addAttribute(&quot;patientBean&quot;, patientBean);</span>
+<span class="nc" id="L83">			model.addAttribute(&quot;note&quot;, note);</span>
+<span class="nc" id="L84">			return &quot;updateNote&quot;;</span>
+		}else {
+<span class="nc" id="L86">			return &quot;redirect:/patients&quot;;</span>
+		}
+	}
+	
+	
+	@PostMapping(&quot;/patient/{patientId}/note/{id}/validateupdate&quot;)
+	public String updateNote(@ModelAttribute(&quot;noteBean&quot;) Note note, @PathVariable(&quot;patientId&quot;) String patientId, @PathVariable(&quot;id&quot;) String id, Model model) {
+		try {
+<span class="fc" id="L94">			noteService.updateNote(note);</span>
+<span class="fc" id="L95">			return &quot;redirect:/&quot;;</span>
+<span class="nc" id="L96">		} catch (Exception e) {</span>
+<span class="nc" id="L97">			return &quot;redirect:/patients&quot;;</span>
+		}
+	}
+	
+	@GetMapping(&quot;/note/{noteId}/delete&quot;)
+	public String deleteNote(@PathVariable(&quot;noteId&quot;) String noteId) {
+<span class="fc" id="L103">		Note note = noteService.findNote(noteId);</span>
+		
+<span class="fc bfc" id="L105" title="All 2 branches covered.">		if(note!=null) {</span>
+<span class="fc" id="L106">			noteService.deleteNote(noteId);</span>
+<span class="fc" id="L107">			return &quot;redirect:/patients&quot;;</span>
+		}else {
+<span class="fc" id="L109">			return &quot;redirect:/patients&quot;;</span>
+		}
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

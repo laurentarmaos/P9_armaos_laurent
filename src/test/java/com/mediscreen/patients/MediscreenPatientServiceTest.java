@@ -35,6 +35,10 @@ public class MediscreenPatientServiceTest {
 	public void findAllPatientsTest() {
 		PatientBean patient1 = new PatientBean();
 		patient1.setFirstName("fname1");
+		patient1.setLastName("lname1");
+		patient1.setGender("M");
+		patient1.setAddress("address");
+		patient1.setPhone("123456");
 		
 		PatientBean patient2 = new PatientBean();
 		patient2.setFirstName("fname2");
