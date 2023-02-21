@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mediscreen.beans.Note;
 
-@FeignClient(name="microservice-notes", url="localhost:8082")
+@FeignClient(name="microservice-notes", url="practitionnernotes:8082")
 public interface NotesProxy {
 
 	@GetMapping("/note/{noteId}")

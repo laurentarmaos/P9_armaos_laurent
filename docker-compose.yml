@@ -2,29 +2,33 @@ version: "3"
 services:
 
   mysql_db:
-    image: "mysql:8.0"
+    image: mysql:8.0
+    container_name: mysql_db
     volumes:
       - mysql_db_data:/var/lib/mysql
     restart: always
-    ports:
-      - "3308:3306"
     environment:
       MYSQL_DATABASE: mediscreen
-      MYSQL_ROOT_USERNAME: root
+      MYSQL_ROOT_USER: root
       MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
     networks:
       - mediscreen-network
     cap_add:
       - SYS_NICE
 
-  mongodb:
+  mongo_db:
       image: mongo:latest
+      container_name: mongo_db
       volumes:
         - mongo_db_data:/data/db
         - mongo_config:/data/configdb
       restart: always
       ports:
-        - "27018:27017"
+        - "27017:27017"
+      networks:
+       - mediscreen-network
 
   mediscreen:
     depends_on:
@@ -49,7 +53,7 @@ services:
     depends_on:
       - mysql_db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_db/mediscreen?useSSL=false
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_db/mediscreen
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
     ports:
@@ -62,9 +66,9 @@ services:
     image: practitionnernote
     container_name: practitionnernote
     depends_on:
-      - mongodb
+      - mongo_db
     environment:
-      SPRING_DATA_MONGODB_HOST: mongodb
+      SPRING_DATA_MONGODB_HOST: mongo_db
       SPRING_DATA_MONGODB_PORT: 27017
       SPRING_DATA_MONGODB_DATABASE: mediscreennotes
     ports:
@@ -93,6 +97,6 @@ networks:
     driver: bridge      
 
 volumes:
-  mysql_db_data: {}
-  mongo_db_data: {}
-  mongo_config: {}
+  mysql_db_data: 
+  mongo_db_data: 
+  mongo_config: 

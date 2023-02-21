@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.mediscreen.beans.PatientBean;
 
 
-@FeignClient(name="microservice-risks", url="localhost:8083")
+@FeignClient(name="microservice-risks", url="risks:8083")
 public interface RiskProxy {
 
 	

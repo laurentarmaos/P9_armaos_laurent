@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.mediscreen.beans.PatientBean;
 
-@FeignClient(name="microservice-patients", url="localhost:8081")
+@FeignClient(name="microservice-patients", url="patientinfos:8081")
 public interface PatientProxy {
 	
 	@GetMapping("/patients")
